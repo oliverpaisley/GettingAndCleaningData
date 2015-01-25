@@ -58,3 +58,10 @@ names(subset_data) <- gsub("[()]", "", names(subset_data))
 tidy_data <- subset_data %>%
   group_by(Activity) %>%
   summarise_each(funs(mean))
+
+tidy_data <- tidy_data[, -2]
+
+# This creates a file called tidy_data.txt.
+file.create("tidy_data.txt")
+# This writes tidy_data into the tidy_data.txt text file.
+write.table(tidy_data, file = "tidy_data.txt", row.name = FALSE)
