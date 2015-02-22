@@ -25,8 +25,8 @@ colnames(y_train)   <- "Activity"
 colnames(sub_train) <- "Subject"
 
 # Merging the x and y data into the test and train datasets.
-test  <- cbind(y_test, x_test)
-train <- cbind(y_train, x_train)
+test  <- cbind(sub_test, y_test, x_test)
+train <- cbind(sub_train, y_train, x_train)
 
 # Merging the test and train data.
 both_sets <- rbind(train, test)
@@ -40,15 +40,20 @@ both_sets <- as_data_frame(both_sets)
 subset_data <- both_sets[ , grepl("(mean)|(std)", colnames(both_sets))]
 
 # Putting back on the activity labels.
-subset_data <- cbind(Activity = both_sets[, 1], subset_data)
+subset_data <- cbind(Subject = both_sets$Subject, Activity = both_sets$Activity, subset_data)
 
 # Converting the Activity column to a factor.
 subset_data$Activity <- as.factor(subset_data$Activity)
 
 # Setting descriptive names for the activies.
-levels(subset_data$Activity) <- c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING")
+levels(subset_data$Activity) <- c("WALKING", 
+                                  "WALKING_UPSTAIRS", 
+                                  "WALKING_DOWNSTAIRS", 
+                                  "SITTING", 
+                                  "STANDING", 
+                                  "LAYING")
 
-# These 3 gsub() lines fix the names of the columns.
+# These 2 gsub() lines fix the names of the columns.
 # It gets rid of all the unnecessary characters, and keeps all of the
 # important information.
 names(subset_data) <- gsub("-", "", names(subset_data))
@@ -56,10 +61,12 @@ names(subset_data) <- gsub("[()]", "", names(subset_data))
 
 # This groups the data by activity, then takes the mean of each feature.
 tidy_data <- subset_data %>%
-  group_by(Activity) %>%
+  group_by(Subject, Activity) %>%
   summarise_each(funs(mean))
 
-tidy_data <- tidy_data[, -2]
+# Update feature names to indicate they are now means (of means).
+
+names(tidy_data)[3:81] <- gsub("(.+)", "Mean_\\1", names(tidy_data)[3:81])
 
 # This creates a file called tidy_data.txt.
 file.create("tidy_data.txt")
