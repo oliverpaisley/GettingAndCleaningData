@@ -10,6 +10,6 @@ Then, all of the column names (the features) were cleaned up. (Parentheses and d
 
 Then, all of the features that were not a mean or standard deviation were discarded. 
 
-Then, using the dplyr package, the data was grouped by activity, and the mean of each feature was calculated.
+Then, using the dplyr package, the data was grouped by subject and activity, and the mean of each feature was calculated.
 
-The end result is a tidy dataset with 6 rows and 80 columns. Each row is an activity, and each column is a mean of a standard deviation feature or mean feature.
+The end result is a tidy dataset with 180 rows and 81 columns. Each row is a subject and activity, and each column is a mean of a standard deviation feature or mean feature.
